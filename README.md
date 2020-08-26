@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# transcriber
-A video transcription project to make YouTube videos audio content available as text
-=======
 # YouTube Transcriber
 
 
@@ -43,7 +39,3 @@ The main use case is downloading a video / videos (as audio) from YouTube and tr
  - Now, the virtual environment is ready, the next step is run the project. For your convenience, I provided a sample .wav file so you can test your setup if it's working. Also, you can download audio files from [here](http://www.voiptroubleshooter.com/open_speech/american.html)
 
  		$ python run.py --audio audio_files/sample.wav
-
-
-
->>>>>>> b0526b5cdb6482245db3d0424c4ac2f402391ee2
