@@ -4,10 +4,11 @@
 ## Installation
 
 This repository includes couple options for transcription;
- - YouTube video transcriber
- - A video transcriber
- - Record your voice and transcriber afterwards
- - Transcribe while speaking
+ 
+- [ ] YouTube video transcriber
+- [x] A video transcriber
+- [ ] Record your voice and transcriber afterwards
+- [ ] Transcribe while speaking
 
 
 For each use case's you need to install couple different softwares/libraries.
@@ -20,15 +21,15 @@ The main use case is downloading a video / videos (as audio) from YouTube and tr
 
  - Install SoX Swiss army knife for audio processing things
 
- 		$ brew install sox      					# For Mac Os X
- 		$ sudo apt install sox  					# For Ubuntu
+ 		$ brew install sox      				# For Mac Os X
+ 		$ sudo apt install sox  				# For Ubuntu
 
  - create a new Python virtual environment
 
  		$ conda create --name transcriber python=3.6
  		$ conda activate transcriber
- 		$ conda install tensorflow==1.13.1  		# if you have GPU, then install *conda install tensorflow-gpu==1.13.1*  (surprisingly I like this version of tensorflow :) )
- 		$ pip install youtube-dl deepspeech==0.7.4  # if you have GPU, then install *pip install deepspeech-gpu==0.7.4*
+ 		$ conda install tensorflow==1.13.1 			# if you have GPU, then install *conda install tensorflow-gpu==1.13.1*  (surprisingly I like this version of tensorflow :) )
+ 		$ pip install youtube-dl deepspeech==0.7.4  		# if you have GPU, then install *pip install deepspeech-gpu==0.7.4*
 
  - Download pre-trained DeepSpeech models from [here](https://github.com/mozilla/STT/releases/tag/v0.7.4)
 
@@ -38,8 +39,7 @@ The main use case is downloading a video / videos (as audio) from YouTube and tr
 
  - Now, the virtual environment is ready, the next step is running the project. For your convenience, I provided a sample .wav file so you can test your setup if it's working. Also, you can download audio files from [here](http://www.voiptroubleshooter.com/open_speech/american.html)
 
- 		$ python run.py 							# This will read audio files from the *audio_locations.txt* file.
-
- 		$ python run.py -a audio_files/sample.wav 	# This will only run inference on this input .wav file
+ 		$ python run.py 					# This will read audio files from the *audio_locations.txt* file.
+ 		$ python run.py -a audio_files/sample.wav 		# This will only run inference on this input .wav file
 
 
