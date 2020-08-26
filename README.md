@@ -36,10 +36,10 @@ The main use case is downloading a video / videos (as audio) from YouTube and tr
  	+ You need to download [0.7.4 pdmm file](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.4/deepspeech-0.7.4-models.pbmm)
  	+ If you want, you can also download and load scorer provided by Mozilla, [scorer](https://github.com/mozilla/DeepSpeech/releases/download/v0.7.4/deepspeech-0.7.4-models.scorer)
 
- - Now, the virtual environment is ready, the next step is run the project. For your convenience, I provided a sample .wav file so you can test your setup if it's working. Also, you can download audio files from [here](http://www.voiptroubleshooter.com/open_speech/american.html)
+ - Now, the virtual environment is ready, the next step is running the project. For your convenience, I provided a sample .wav file so you can test your setup if it's working. Also, you can download audio files from [here](http://www.voiptroubleshooter.com/open_speech/american.html)
 
- 		$ python run.py                             # This will read audio files from the *audio_locations.txt* file.
+ 		$ python run.py 							# This will read audio files from the *audio_locations.txt* file.
 
- 		$ python run.py -a audio_files/sample.wav   # This will only run inference on this input .wav file
+ 		$ python run.py -a audio_files/sample.wav 	# This will only run inference on this input .wav file
 
 
