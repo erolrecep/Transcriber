@@ -7,6 +7,7 @@ import subprocess
 import sys
 import json
 import os
+import argparse
 import numpy as np
 from deepspeech import Model
 import wave
@@ -96,13 +97,45 @@ def write2txt(filename, text):
 
 
 # Transcribe single file
-def transcribe_(audio_file):
-    pass
+def transcribe_(audio_loc, desired_sample_rate, ds):
 
+    print(f"audio location: {audio_loc}")
 
-# Transcribe many files from a list
-def transcribe_many(list_of_files):
-    pass
+    fin = wave.open(audio_loc, 'rb')
+    fs_orig = fin.getframerate()
+    if fs_orig != desired_sample_rate:
+        print(
+            'Warning: original sample rate ({}) is different than {}hz. Resampling might produce erratic speech '
+            'recognition.'.format(
+                fs_orig, desired_sample_rate), file=sys.stderr)
+        fs_new, audio = convert_samplerate(audio_loc, desired_sample_rate)
+    else:
+        audio = np.frombuffer(fin.readframes(fin.getnframes()), np.int16)
+
+    audio_length = fin.getnframes() * (1 / fs_orig)
+    fin.close()
+
+    print('Running inference.', file=sys.stderr)
+    inference_start = timer()
+    # sphinx-doc: python_ref_inference_start
+
+    # Write inference output as a string to a txt file
+    output_text = metadata_to_string(ds.sttWithMetadata(audio, 1).transcripts[0])
+    # print(output_text)
+
+    # Write output txt to a txt file
+    audio_file = audio_loc
+    text_filename = audio_file[:-4] + "_DeepSpeech_output.txt"
+    print(f"TXT Inference result is being written to {text_filename}")
+    write2txt(filename=text_filename, text=output_text)
+
+    # Also write output with other metadata to a json file
+    json_filename = audio_file[:-4] + "_DeepSpeech_output.json"
+    print(f"JSON Inference result is being written to {json_filename}")
+    metadata_json_output(ds.sttWithMetadata(audio, candidate_transcripts), filename=json_filename)
+
+    inference_end = timer() - inference_start
+    print('Inference took %0.3fs for %0.3fs audio file.' % (inference_end, audio_length), file=sys.stderr)
 
 
 def load_model(model_file, scorer_file):
@@ -112,7 +145,14 @@ def load_model(model_file, scorer_file):
     return ds
 
 
-if __name__ == '__main__':
+def main():
+
+    # construct the argument parse and parse the arguments
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-a", "--audio", required=False, help="single audio file location")
+    ap.add_argument("-l", "--list", required=False, help="A txt file location that has audio file(s) location", default=cwd + "/audio_locations.txt")
+    args = vars(ap.parse_args())
+    
     print(MODEL_FILE)
     print(SCORER_FILE)
 
@@ -136,47 +176,34 @@ if __name__ == '__main__':
 
     # TODO: lm_alpha and lm_beta are omitted because they are being used from scorer
 
+    if args["audio"] is not None:
+        transcribe_(args["audio"], desired_sample_rate, ds)
+
+
     # read video_urls or video_locs file and transcribe one by one
-    with open(cwd + "/audio_locations.txt", "r") as f:
-        locations = f.read()
+    elif args["liste"] is not None:
+        with open(args["list"], "r") as f:
+            locations = f.read()
 
-    locations = locations.split("\n")
+        locations = locations.split("\n")
 
-    for audio_loc in locations:
-        print(f"audio location: {audio_loc}")
+        for audio_loc in locations:
+            transcribe_(audio_loc, desired_sample_rate, ds)
 
-        fin = wave.open(audio_loc, 'rb')
-        fs_orig = fin.getframerate()
-        if fs_orig != desired_sample_rate:
-            print(
-                'Warning: original sample rate ({}) is different than {}hz. Resampling might produce erratic speech '
-                'recognition.'.format(
-                    fs_orig, desired_sample_rate), file=sys.stderr)
-            fs_new, audio = convert_samplerate(audio_loc, desired_sample_rate)
-        else:
-            audio = np.frombuffer(fin.readframes(fin.getnframes()), np.int16)
+    else:
+        raise ValueError("[ERROR] Check your command line arguments, there is something wrong!")
 
-        audio_length = fin.getnframes() * (1 / fs_orig)
-        fin.close()
 
-        print('Running inference.', file=sys.stderr)
-        inference_start = timer()
-        # sphinx-doc: python_ref_inference_start
+if __name__ == '__main__':
+    main()
 
-        # Write inference output as a string to a txt file
-        output_text = metadata_to_string(ds.sttWithMetadata(audio, 1).transcripts[0])
-        # print(output_text)
 
-        # Write output txt to a txt file
-        audio_file = audio_loc
-        text_filename = audio_file[:-4] + "_DeepSpeech_output.txt"
-        print(f"TXT Inference result is being written to {text_filename}")
-        write2txt(filename=text_filename, text=output_text)
 
-        # Also write output with other metadata to a json file
-        json_filename = audio_file[:-4] + "_DeepSpeech_output.json"
-        print(f"JSON Inference result is being written to {json_filename}")
-        metadata_json_output(ds.sttWithMetadata(audio, candidate_transcripts), filename=json_filename)
 
-        inference_end = timer() - inference_start
-        print('Inference took %0.3fs for %0.3fs audio file.' % (inference_end, audio_length), file=sys.stderr)
+
+
+
+
+
+
+    
