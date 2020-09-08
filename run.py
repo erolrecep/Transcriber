@@ -181,7 +181,7 @@ def main():
 
 
     # read video_urls or video_locs file and transcribe one by one
-    elif args["liste"] is not None:
+    elif args["list"] is not None:
         with open(args["list"], "r") as f:
             locations = f.read()
 
