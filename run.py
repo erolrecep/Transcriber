@@ -15,8 +15,8 @@ from timeit import default_timer as timer
 
 
 cwd = os.getcwd()
-MODEL_FILE = cwd + "/models/deepspeech-0.7.4-models.pbmm"
-SCORER_FILE = cwd + "/models/deepspeech-0.7.4-models.scorer"
+MODEL_FILE = cwd + "/models/deepspeech-0.9.3-models.pbmm"
+SCORER_FILE = cwd + "/models/deepspeech-0.9.3-models.scorer"
 AUDIO_FILE = cwd + "/audio_files/deneme.wav"
 TXT_OUTPUT_FOLDER = cwd + "/output"
 
